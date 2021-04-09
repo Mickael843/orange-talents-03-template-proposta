@@ -1,5 +1,6 @@
 package com.mikkaeru.proposal.controller;
 
+import com.mikkaeru.exception.Problem;
 import com.mikkaeru.proposal.dto.ProposalRequest;
 import com.mikkaeru.proposal.model.Proposal;
 import com.mikkaeru.proposal.repository.ProposalRepository;
@@ -12,6 +13,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 @RestController
 @RequestMapping("/proposals")
@@ -26,6 +30,13 @@ public class ProposalController {
     @PostMapping
     @Transactional
     public ResponseEntity<?> createProposal(@RequestBody @Valid ProposalRequest proposalRequest) {
+        boolean existsDocument = proposalRepository.existsByDocument(proposalRequest.getDocument());
+
+        if (existsDocument) {
+            return ResponseEntity.unprocessableEntity().body(
+                    new Problem("Documento invalido!", UNPROCESSABLE_ENTITY.value(), LocalDateTime.now()));
+        }
+
         Proposal proposal = proposalRepository.save(proposalRequest.toModel());
 
         return ResponseEntity.created(

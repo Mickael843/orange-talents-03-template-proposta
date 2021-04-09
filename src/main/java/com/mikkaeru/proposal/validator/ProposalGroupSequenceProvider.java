@@ -14,7 +14,7 @@ public class ProposalGroupSequenceProvider implements DefaultGroupSequenceProvid
         groups.add(ProposalRequest.class);
 
         if (proposalRequest != null && proposalRequest.getDocument() != null) {
-            var documentSize = resize(proposalRequest.getDocument());
+            var documentSize = proposalRequest.getDocument().length();
 
             if (documentSize == 11) {
                 groups.add(CpfGroup.class);
@@ -24,15 +24,5 @@ public class ProposalGroupSequenceProvider implements DefaultGroupSequenceProvid
         }
 
         return groups;
-    }
-
-    private int resize(String documentSizeWithSpecialCharacter) {
-
-        var tmp = documentSizeWithSpecialCharacter
-                .replace(".", "")
-                .replace("-", "")
-                .replace("/", "");
-
-        return tmp.length();
     }
 }

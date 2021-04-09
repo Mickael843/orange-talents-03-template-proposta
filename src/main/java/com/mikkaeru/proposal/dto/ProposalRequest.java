@@ -15,6 +15,8 @@ import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static com.mikkaeru.proposal.utils.DocumentReplace.replaceAll;
+
 @GroupSequenceProvider(ProposalGroupSequenceProvider.class)
 public class ProposalRequest {
 
@@ -30,9 +32,9 @@ public class ProposalRequest {
                            @NotNull @Positive BigDecimal salary, @NotNull String address) {
         this.name = name;
         this.email = email;
-        this.document = document;
         this.salary = salary;
         this.address = address;
+        this.document = replaceAll(document);
     }
 
     public Proposal toModel() {

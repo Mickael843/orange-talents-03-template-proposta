@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProposalRepository extends CrudRepository<Proposal, Long> {
+    Boolean existsByDocument(String document);
 }
