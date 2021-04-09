@@ -1,5 +1,7 @@
 package com.mikkaeru.proposal.model;
 
+import org.springframework.util.StringUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import static javax.persistence.GenerationType.IDENTITY;
+import static org.hibernate.validator.internal.util.Contracts.assertTrue;
 
 @Entity
 public class Proposal {
@@ -39,6 +42,14 @@ public class Proposal {
 
     public Proposal(@NotBlank String name, @Email @NotBlank String email, @NotBlank String document,
                     @NotNull @Positive BigDecimal salary, @NotBlank String address, UUID code) {
+        assertTrue(StringUtils.hasLength(name), "O campo (nome) não pode estar em branco!");
+        assertTrue(StringUtils.hasLength(email), "O campo (email) não pode estar em branco!");
+        assertTrue(StringUtils.hasLength(address), "O campo (address) não pode estar em branco!");
+        assertTrue(StringUtils.hasLength(document), "O campo (document) não pode estar em branco!");
+
+        assertTrue(salary != null, "O campo (salary) não pode ser nulo!");
+        assertTrue(code != null, "O campo (code) não pode ser nulo!");
+
         this.code = code;
         this.name = name;
         this.email = email;

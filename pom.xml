@@ -11,13 +11,14 @@
     </parent>
 
     <groupId>com.mikkaeru</groupId>
-    <artifactId>proposals</artifactId>
+    <artifactId>proposal</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>proposals</name>
+    <name>proposal</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
         <java.version>11</java.version>
+        <javafaker.version>0.12</javafaker.version>
     </properties>
 
     <dependencies>
@@ -37,6 +38,23 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>${javafaker.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
