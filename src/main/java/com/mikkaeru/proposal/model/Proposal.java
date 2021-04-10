@@ -2,10 +2,7 @@ package com.mikkaeru.proposal.model;
 
 import org.springframework.util.StringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,6 +10,7 @@ import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.validator.internal.util.Contracts.assertTrue;
 
@@ -34,6 +32,8 @@ public class Proposal {
     private String address;
     @Column(nullable = false, unique = true, updatable = false)
     private UUID code;
+    @Enumerated(STRING)
+    private ProposalState state;
 
     /**
      * @deprecated hibernate only
@@ -58,7 +58,19 @@ public class Proposal {
         this.document = document;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
     public UUID getCode() {
         return code;
+    }
+
+    public void addState(ProposalState state) {
+        this.state = state;
     }
 }
