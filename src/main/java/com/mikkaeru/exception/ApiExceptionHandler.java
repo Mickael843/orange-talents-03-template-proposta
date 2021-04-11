@@ -1,5 +1,6 @@
 package com.mikkaeru.exception;
 
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -33,6 +34,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionDataIntegrity(Exception exception) {
         Problem problem = new Problem(exception.getCause().getMessage(), BAD_REQUEST.value(), LocalDateTime.now());
         return new ResponseEntity<>(problem, BAD_REQUEST);
+    }
+
+    @ExceptionHandler({FeignException.class})
+    protected ResponseEntity<Object> handleFeignException(FeignException exception) {
+        Problem problem = new Problem(exception.getMessage(), exception.status(), LocalDateTime.now());
+        return new ResponseEntity<>(problem, HttpStatus.valueOf(exception.status()));
     }
 
     @Override

@@ -1,11 +1,10 @@
 package com.mikkaeru.request.dto;
 
+import com.mikkaeru.request.model.SolicitationReviewStatus;
+
 import javax.validation.constraints.NotBlank;
 
 public class ReviewResponse {
-
-    // TODO resultadoSolicitacao - irá ser um enum com os seguintes valores {COM_RESTRICAO, SEM_RESTRICAO}
-    // TODO utilizar o método (valueOf) do enum para realizar uma validação.
 
     private @NotBlank String documento;
     private @NotBlank String nome;
@@ -31,7 +30,7 @@ public class ReviewResponse {
         return idProposta;
     }
 
-    public String getResultadoSolicitacao() {
-        return resultadoSolicitacao;
+    public SolicitationReviewStatus getResultadoSolicitacao() {
+        return SolicitationReviewStatus.valueOf(resultadoSolicitacao);
     }
 }

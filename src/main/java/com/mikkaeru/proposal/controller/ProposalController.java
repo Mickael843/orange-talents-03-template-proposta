@@ -3,11 +3,8 @@ package com.mikkaeru.proposal.controller;
 import com.mikkaeru.exception.Problem;
 import com.mikkaeru.proposal.dto.ProposalRequest;
 import com.mikkaeru.proposal.model.Proposal;
-import com.mikkaeru.proposal.model.ProposalState;
 import com.mikkaeru.proposal.repository.ProposalRepository;
-import com.mikkaeru.request.SolicitationReview;
-import com.mikkaeru.request.dto.ReviewRequest;
-import com.mikkaeru.request.dto.ReviewResponse;
+import com.mikkaeru.proposal.utils.ProcessProposal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,12 +21,13 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 @RequestMapping("/proposals")
 public class ProposalController {
 
+    private final ProcessProposal processProposal;
     private final ProposalRepository proposalRepository;
-    private SolicitationReview solicitationReview;
 
-    public ProposalController(ProposalRepository proposalRepository, SolicitationReview solicitationReview) {
+    public ProposalController(ProcessProposal processProposal, ProposalRepository proposalRepository) {
+        this.processProposal = processProposal;
         this.proposalRepository = proposalRepository;
-        this.solicitationReview = solicitationReview;
+
     }
 
 
@@ -42,25 +40,11 @@ public class ProposalController {
                     new Problem("Documento invalido!", UNPROCESSABLE_ENTITY.value(), LocalDateTime.now()));
         }
 
-        Proposal proposal = proposalRepository.save(proposalRequest.toModel());
-
-        ReviewResponse reviewResponse = solicitationReview.solicitation(
-                new ReviewRequest(proposal.getDocument(), proposal.getName(), proposal.getCode().toString())
-        );
-
-        if (reviewResponse.getResultadoSolicitacao().equals("COM_RESTRICAO")) {
-            proposal.addState(ProposalState.valueOf("NOT_ELIGIBLE"));
-        } else if (reviewResponse.getResultadoSolicitacao().equals("SEM_RESTRICAO")) {
-            proposal.addState(ProposalState.valueOf("ELIGIBLE"));
-        }
-
-        // TODO Pensar em uma melhor solução para esse trecho de codigo
-        // TODO em relação a ter uma ou mais transações abertas.
-        proposal = proposalRepository.save(proposal);
+        Proposal proposal = processProposal.process(proposalRepository, proposalRequest.toModel());
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{code}")
                 .buildAndExpand(proposal.getCode())
                 .toUri()
         ).build();
