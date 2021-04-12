@@ -1,14 +1,12 @@
-package com.mikkaeru.request.dto;
+package com.mikkaeru.request.card.dto;
 
-import javax.validation.constraints.NotBlank;
+public class CardRequest {
 
-public class ReviewRequest {
+    private String documento;
+    private String nome;
+    private String idProposta;
 
-    private @NotBlank String documento;
-    private @NotBlank String nome;
-    private @NotBlank String idProposta;
-
-    public ReviewRequest(String documento, String nome, String idProposta) {
+    public CardRequest(String documento, String nome, String idProposta) {
         this.documento = documento;
         this.nome = nome;
         this.idProposta = idProposta;

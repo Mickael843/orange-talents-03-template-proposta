@@ -21,15 +21,20 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 @RequestMapping("/proposals")
 public class ProposalController {
 
+    // TODO Encontrar uma forma de controlar o momento em que o método execute é chamado
+
+    // TODO Adicionar as propostas que foram geradas com sucesso em uma pilha de execução.
+    // TODO Realizar a consulta em tempo periódico o sistema de cartão.
+    // TODO Associar o número do cartão na proposta previamente criada com sucesso.
+    // TODO O cartão deve ser persistido de acordo com as informações recebidas do sistema externo.
+
     private final ProcessProposal processProposal;
     private final ProposalRepository proposalRepository;
 
     public ProposalController(ProcessProposal processProposal, ProposalRepository proposalRepository) {
         this.processProposal = processProposal;
         this.proposalRepository = proposalRepository;
-
     }
-
 
     @PostMapping
     public ResponseEntity<?> createProposal(@RequestBody @Valid ProposalRequest proposalRequest) {

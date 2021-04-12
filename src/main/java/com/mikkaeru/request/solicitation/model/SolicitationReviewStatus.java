@@ -1,4 +1,4 @@
-package com.mikkaeru.request.model;
+package com.mikkaeru.request.solicitation.model;
 
 import com.mikkaeru.proposal.model.ProposalState;
 

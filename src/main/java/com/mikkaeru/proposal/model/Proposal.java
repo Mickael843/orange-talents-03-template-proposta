@@ -1,5 +1,6 @@
 package com.mikkaeru.proposal.model;
 
+import com.mikkaeru.request.card.model.Card;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
@@ -34,6 +35,8 @@ public class Proposal {
     private UUID code;
     @Enumerated(STRING)
     private ProposalState state;
+    @ManyToOne
+    private Card card;
 
     /**
      * @deprecated hibernate only
@@ -68,6 +71,10 @@ public class Proposal {
 
     public UUID getCode() {
         return code;
+    }
+
+    public ProposalState getState() {
+        return state;
     }
 
     public void addState(ProposalState state) {

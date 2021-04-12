@@ -1,7 +1,7 @@
-package com.mikkaeru.request;
+package com.mikkaeru.request.solicitation;
 
-import com.mikkaeru.request.dto.ReviewRequest;
-import com.mikkaeru.request.dto.ReviewResponse;
+import com.mikkaeru.request.solicitation.dto.ReviewRequest;
+import com.mikkaeru.request.solicitation.dto.ReviewResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 

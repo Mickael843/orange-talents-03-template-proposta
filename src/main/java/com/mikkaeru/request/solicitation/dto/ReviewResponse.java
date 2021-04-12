@@ -1,6 +1,6 @@
-package com.mikkaeru.request.dto;
+package com.mikkaeru.request.solicitation.dto;
 
-import com.mikkaeru.request.model.SolicitationReviewStatus;
+import com.mikkaeru.request.solicitation.model.SolicitationReviewStatus;
 
 import javax.validation.constraints.NotBlank;
 
