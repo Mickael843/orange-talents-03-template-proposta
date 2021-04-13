@@ -1,10 +1,9 @@
 package com.mikkaeru.request.card;
 
 import com.mikkaeru.proposal.model.Proposal;
+import com.mikkaeru.proposal.repository.ProposalRepository;
 import com.mikkaeru.request.card.dto.CardRequest;
 import com.mikkaeru.request.card.dto.CardResponse;
-import com.mikkaeru.request.card.model.Card;
-import com.mikkaeru.request.card.repository.CardRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +14,12 @@ import java.util.Set;
 public class CardRequestTask {
 
     private final CardResource cardResource;
-    private final CardRepository cardRepository;
+    private final ProposalRepository proposalRepository;
     private final Set<Proposal> acceptProposals = new HashSet<>();
 
-    public CardRequestTask(CardResource cardResource, CardRepository cardRepository) {
+    public CardRequestTask(CardResource cardResource, ProposalRepository proposalRepository) {
         this.cardResource = cardResource;
-        this.cardRepository = cardRepository;
+        this.proposalRepository = proposalRepository;
     }
 
     @Scheduled(fixedDelayString = "${frequency.dummy-task}")
@@ -35,11 +34,9 @@ public class CardRequestTask {
 
             acceptProposals.remove(proposal);
 
-            Card card = cardResponse.toModel();
+            proposal.addCard(cardResponse.toModel());
 
-            card.addProposal(proposal);
-
-            cardRepository.save(card);
+            proposalRepository.save(proposal);
 
             System.out.println("PILHA DE PROPOSTAS NÃO ESTÁ NULA");
         }

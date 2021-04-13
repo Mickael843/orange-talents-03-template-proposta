@@ -11,6 +11,7 @@ import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.validator.internal.util.Contracts.assertTrue;
@@ -35,7 +36,7 @@ public class Proposal {
     private UUID code;
     @Enumerated(STRING)
     private ProposalState state;
-    @ManyToOne
+    @ManyToOne(cascade = MERGE)
     private Card card;
 
     /**
@@ -79,5 +80,9 @@ public class Proposal {
 
     public void addState(ProposalState state) {
         this.state = state;
+    }
+
+    public void addCard(Card card) {
+        this.card = card;
     }
 }
