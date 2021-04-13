@@ -22,7 +22,7 @@ public class CardRequestTask {
         this.proposalRepository = proposalRepository;
     }
 
-    @Scheduled(fixedDelayString = "${frequency.dummy-task}")
+    @Scheduled(fixedDelayString = "${frequency.request-task}")
     private void execute() {
 
         if (acceptProposals.size() > 0) {
