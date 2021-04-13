@@ -37,11 +37,7 @@ public class CardRequestTask {
             proposal.addCard(cardResponse.toModel());
 
             proposalRepository.save(proposal);
-
-            System.out.println("PILHA DE PROPOSTAS NÃO ESTÁ NULA");
         }
-
-        System.out.println("PILHA NULA...");
     }
 
     public void addAcceptProposal(Proposal proposal) {

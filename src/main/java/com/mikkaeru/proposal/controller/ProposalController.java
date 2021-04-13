@@ -2,18 +2,18 @@ package com.mikkaeru.proposal.controller;
 
 import com.mikkaeru.exception.Problem;
 import com.mikkaeru.proposal.dto.ProposalRequest;
+import com.mikkaeru.proposal.dto.ProposalResponse;
 import com.mikkaeru.proposal.model.Proposal;
 import com.mikkaeru.proposal.repository.ProposalRepository;
 import com.mikkaeru.proposal.utils.ProcessProposal;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
@@ -46,5 +46,16 @@ public class ProposalController {
                 .buildAndExpand(proposal.getCode())
                 .toUri()
         ).build();
+    }
+
+    @GetMapping("/{code}")
+    public ResponseEntity<?> getProposal(@PathVariable UUID code) {
+        Optional<Proposal> proposalOptional = proposalRepository.findByCode(code);
+
+        if (proposalOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(new ProposalResponse(proposalOptional.get()));
     }
 }

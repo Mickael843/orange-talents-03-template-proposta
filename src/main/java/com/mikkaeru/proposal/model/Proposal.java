@@ -74,6 +74,10 @@ public class Proposal {
         return code;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public ProposalState getState() {
         return state;
     }
