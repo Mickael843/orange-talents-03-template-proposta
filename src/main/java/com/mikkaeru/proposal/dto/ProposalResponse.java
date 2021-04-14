@@ -11,10 +11,10 @@ public class ProposalResponse {
     private ProposalState state;
 
     public ProposalResponse(Proposal proposal) {
-        this.code = proposal.getCode();
         this.name = proposal.getName();
         this.email = proposal.getEmail();
         this.state = proposal.getState();
+        this.code = proposal.getCode().toString();
     }
 
     public String getCode() {

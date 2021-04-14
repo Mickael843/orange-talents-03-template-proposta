@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.EnumType.STRING;
@@ -32,7 +33,7 @@ public class Proposal {
     @Column(nullable = false)
     private String address;
     @Column(nullable = false, unique = true, updatable = false)
-    private String code;
+    private UUID code;
     @Enumerated(STRING)
     private ProposalState state;
     @ManyToOne(cascade = MERGE)
@@ -44,7 +45,7 @@ public class Proposal {
     public Proposal() { }
 
     public Proposal(@NotBlank String name, @Email @NotBlank String email, @NotBlank String document,
-                    @NotNull @Positive BigDecimal salary, @NotBlank String address, String code) {
+                    @NotNull @Positive BigDecimal salary, @NotBlank String address, UUID code) {
         assertTrue(StringUtils.hasLength(name), "O campo (nome) não pode estar em branco!");
         assertTrue(StringUtils.hasLength(email), "O campo (email) não pode estar em branco!");
         assertTrue(StringUtils.hasLength(address), "O campo (address) não pode estar em branco!");
@@ -69,7 +70,7 @@ public class Proposal {
         return document;
     }
 
-    public String getCode() {
+    public UUID getCode() {
         return code;
     }
 
