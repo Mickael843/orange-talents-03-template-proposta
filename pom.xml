@@ -19,6 +19,7 @@
     <properties>
         <java.version>11</java.version>
         <javafaker.version>0.12</javafaker.version>
+        <keycloak.version>12.0.4</keycloak.version>
         <spring-cloud.version>2020.0.1</spring-cloud.version>
     </properties>
 
@@ -89,6 +90,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-spring-boot-starter</artifactId>
+            <version>${keycloak.version}</version>
         </dependency>
     </dependencies>
 
@@ -105,7 +107,7 @@
             <dependency>
                 <groupId>org.keycloak.bom</groupId>
                 <artifactId>keycloak-adapter-bom</artifactId>
-                <version>12.0.4</version>
+                <version>${keycloak.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
