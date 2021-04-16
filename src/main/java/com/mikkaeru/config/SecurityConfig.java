@@ -50,6 +50,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
             .disable()
             .authorizeRequests()
                 .antMatchers("/biometrics/**").hasRole("user")
+                .antMatchers("/proposals/**").hasRole("user")
                 .anyRequest().permitAll();
     }
 }
