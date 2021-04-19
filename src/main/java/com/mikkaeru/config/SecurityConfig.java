@@ -21,8 +21,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
      * Registers the KeycloakAuthenticationProvider with the authentication manager.
      * */
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        KeycloakAuthenticationProvider keycloakAuthenticationProvider =keycloakAuthenticationProvider();
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
+        KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
         keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
         auth.authenticationProvider(keycloakAuthenticationProvider);
     }
@@ -49,8 +49,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
             .csrf()
             .disable()
             .authorizeRequests()
-                .antMatchers("/biometrics/**").hasRole("user")
-                .antMatchers("/proposals/**").hasRole("user")
+                .antMatchers("/biometrics/**").hasRole("USER")
+                .antMatchers("/proposals/**").hasRole("USER")
                 .anyRequest().permitAll();
     }
 }

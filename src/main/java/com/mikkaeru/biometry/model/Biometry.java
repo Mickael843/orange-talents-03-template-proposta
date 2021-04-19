@@ -16,7 +16,7 @@ public class Biometry {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @Lob
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String fingerprint;
     @Column(nullable = false, unique = true)
     private UUID biometryCode;

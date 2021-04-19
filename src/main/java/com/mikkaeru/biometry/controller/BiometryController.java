@@ -30,11 +30,6 @@ public class BiometryController {
         this.biometryRepository = biometryRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok("OK TA TUDO CERTO BB");
-    }
-
     @Transactional
     @PostMapping(value = "/{cardCode}")
     public ResponseEntity<?> addBiometry(@PathVariable UUID cardCode, @RequestBody @Valid BiometryRequest biometryRequest) {

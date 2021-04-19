@@ -1,8 +1,8 @@
 {
-  "realm": "proposals-realm",
-  "auth-server-url": "http://localhost:8080/auth",
+  "realm": "backend",
+  "auth-server-url": "http://localhost:18080/auth/",
   "ssl-required": "external",
-  "resource": "proposals",
+  "resource": "proposal-service",
   "public-client": true,
   "verify-token-audience": true,
   "use-resource-role-mappings": true,
