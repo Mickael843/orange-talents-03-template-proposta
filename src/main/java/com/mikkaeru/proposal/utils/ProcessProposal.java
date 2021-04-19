@@ -6,9 +6,11 @@ import com.mikkaeru.request.card.CardRequestTask;
 import com.mikkaeru.request.solicitation.SolicitationReview;
 import com.mikkaeru.request.solicitation.dto.ReviewRequest;
 import com.mikkaeru.request.solicitation.dto.ReviewResponse;
+import feign.FeignException;
 import org.springframework.stereotype.Component;
 
 import static com.mikkaeru.proposal.model.ProposalState.ELIGIBLE;
+import static com.mikkaeru.proposal.model.ProposalState.NOT_ELIGIBLE;
 
 @Component
 public class ProcessProposal {
@@ -22,10 +24,18 @@ public class ProcessProposal {
     }
 
     public Proposal process(ProposalRepository proposalRepository, Proposal proposal) {
-        ReviewResponse reviewResponse = solicitationReview.solicitation(
-                new ReviewRequest(proposal.getDocument(), proposal.getName(), proposal.getCode().toString()));
+        ReviewResponse reviewResponse = null;
 
-        proposal.addState(reviewResponse.getResultadoSolicitacao().getEquivalentStatus());
+        try {
+            reviewResponse = solicitationReview.solicitation(
+                    new ReviewRequest(proposal.getDocument(), proposal.getName(), proposal.getCode().toString()));
+        } catch (FeignException.FeignClientException.UnprocessableEntity e) {
+            proposal.addState(NOT_ELIGIBLE);
+        }
+
+        if (reviewResponse != null) {
+            proposal.addState(reviewResponse.getResultadoSolicitacao().getEquivalentStatus());
+        }
 
         proposal = proposalRepository.save(proposal);
 

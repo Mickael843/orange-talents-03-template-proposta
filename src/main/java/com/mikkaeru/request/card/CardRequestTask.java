@@ -2,8 +2,8 @@ package com.mikkaeru.request.card;
 
 import com.mikkaeru.proposal.model.Proposal;
 import com.mikkaeru.proposal.repository.ProposalRepository;
-import com.mikkaeru.request.card.dto.CardRequest;
 import com.mikkaeru.request.card.dto.CardResponse;
+import feign.FeignException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,17 +26,18 @@ public class CardRequestTask {
     private void execute() {
 
         if (acceptProposals.size() > 0) {
+            CardResponse cardResponse = null;
             Proposal proposal = acceptProposals.iterator().next();
 
-            CardResponse cardResponse = cardResource.processCard(
-                    new CardRequest(proposal.getDocument(), proposal.getName(), proposal.getCode().toString())
-            );
+            try {
+                cardResponse = cardResource.processCard(proposal.getCode().toString());
+            } catch (FeignException.FeignClientException.NotFound ignored) { }
 
-            acceptProposals.remove(proposal);
-
-            proposal.addCard(cardResponse.toModel());
-
-            proposalRepository.save(proposal);
+            if (cardResponse != null) {
+                acceptProposals.remove(proposal);
+                proposal.addCard(cardResponse.toModel());
+                proposalRepository.save(proposal);
+            }
         }
     }
 

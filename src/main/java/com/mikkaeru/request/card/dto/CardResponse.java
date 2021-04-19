@@ -8,18 +8,12 @@ import java.util.UUID;
 
 public class CardResponse {
 
-    private String id;
-    private String titular;
-    private BigDecimal limite;
-    private String idProposta;
-    private String renegociacao;
-    private LocalDateTime emitidoEm;
-//    private List<Notice> avisos;
-//    private List<DueDate> vencimento;
-//    private List<Blockade> bloqueios;
-//    private List<Portfolio> carteiras;
-//    private List<Installments> parcelas;
-
+    private final String id;
+    private final String titular;
+    private final BigDecimal limite;
+    private final String idProposta;
+    private final String renegociacao;
+    private final LocalDateTime emitidoEm;
 
     public CardResponse(String id, String titular, BigDecimal limite, String idProposta, String renegociacao, LocalDateTime emitidoEm) {
         this.id = id;
