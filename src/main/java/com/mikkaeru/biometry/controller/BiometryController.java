@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -32,9 +31,9 @@ public class BiometryController {
 
     @Transactional
     @PostMapping(value = "/{cardCode}")
-    public ResponseEntity<?> addBiometry(@PathVariable UUID cardCode, @RequestBody @Valid BiometryRequest biometryRequest) {
+    public ResponseEntity<?> addBiometry(@PathVariable String cardCode, @RequestBody @Valid BiometryRequest biometryRequest) {
 
-        Optional<Card> cardOptional = cardRepository.findByCode(cardCode);
+        Optional<Card> cardOptional = cardRepository.findByCardCode(cardCode);
 
         if (cardOptional.isEmpty()) {
             return ResponseEntity.notFound().build();

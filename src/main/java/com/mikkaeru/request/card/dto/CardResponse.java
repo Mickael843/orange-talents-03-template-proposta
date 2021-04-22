@@ -4,7 +4,6 @@ import com.mikkaeru.request.card.model.Card;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class CardResponse {
 
@@ -25,6 +24,6 @@ public class CardResponse {
     }
 
     public Card toModel() {
-        return new Card(this.id, this.titular, this.limite, UUID.fromString(this.idProposta), this.emitidoEm, this.renegociacao);
+        return new Card(this.id, this.titular, this.limite, this.idProposta, this.emitidoEm, this.renegociacao);
     }
 }

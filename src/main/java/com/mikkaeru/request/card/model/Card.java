@@ -8,9 +8,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
+import static com.mikkaeru.request.card.model.CardStatus.LOCKED;
 import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -26,10 +27,12 @@ public class Card {
     @Column(nullable = false)
     private BigDecimal limitValue;
     @Column(nullable = false)
-    private UUID code;
+    private String cardCode;
     private String renegotiation;
     @Column(nullable = false)
     private LocalDateTime issuedOn;
+    @Enumerated(STRING)
+    private CardStatus status;
     @OneToMany(mappedBy = "card")
     private Set<Proposal> proposals = new HashSet<>();
     @OneToMany(mappedBy = "card", cascade = MERGE)
@@ -40,13 +43,26 @@ public class Card {
      */
     public Card() { }
 
-    public Card(String cardNumber, String titular, BigDecimal limite, UUID idProposta, LocalDateTime emitidoEm, String renegociacao) {
+    public Card(String cardNumber, String titular, BigDecimal limite, String idProposta, LocalDateTime emitidoEm, String renegociacao) {
 
         this.cardNumber = cardNumber;
         this.owner = titular;
         this.limitValue = limite;
-        this.code = idProposta;
+        this.cardCode = idProposta;
         this.issuedOn = emitidoEm;
         this.renegotiation = renegociacao;
+        this.status = CardStatus.NOT_LOCKED;
+    }
+
+    public boolean isBlocked() {
+        return this.status.equals(LOCKED);
+    }
+
+    public void lockCard() {
+        this.status = LOCKED;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
     }
 }

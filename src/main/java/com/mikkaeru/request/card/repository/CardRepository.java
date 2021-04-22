@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface CardRepository extends CrudRepository<Card, Long> {
-    Optional<Card> findByCode(UUID cardCode);
+    Optional<Card> findByCardCode(String cardCode);
 }

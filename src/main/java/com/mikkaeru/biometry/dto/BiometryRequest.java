@@ -27,6 +27,6 @@ public class BiometryRequest {
             return Optional.empty();
         }
 
-        return Optional.of(new Biometry(this.fingerprint, card, UUID.randomUUID()));
+        return Optional.of(new Biometry(this.fingerprint, card, UUID.randomUUID().toString()));
     }
 }

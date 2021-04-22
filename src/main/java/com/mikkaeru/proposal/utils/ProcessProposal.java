@@ -28,7 +28,7 @@ public class ProcessProposal {
 
         try {
             reviewResponse = solicitationReview.solicitation(
-                    new ReviewRequest(proposal.getDocument(), proposal.getName(), proposal.getCode().toString()));
+                    new ReviewRequest(proposal.getDocument(), proposal.getName(), proposal.getProposalCode().toString()));
         } catch (FeignException.FeignClientException.UnprocessableEntity e) {
             proposal.addState(NOT_ELIGIBLE);
         }

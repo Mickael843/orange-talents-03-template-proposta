@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.EnumType.STRING;
@@ -32,8 +31,8 @@ public class Proposal {
     private BigDecimal salary;
     @Column(nullable = false)
     private String address;
-    @Column(nullable = false, unique = true, updatable = false)
-    private UUID code;
+    @Column(nullable = false, unique = true)
+    private String proposalCode;
     @Enumerated(STRING)
     private ProposalState state;
     @ManyToOne(cascade = MERGE)
@@ -45,16 +44,16 @@ public class Proposal {
     public Proposal() { }
 
     public Proposal(@NotBlank String name, @Email @NotBlank String email, @NotBlank String document,
-                    @NotNull @Positive BigDecimal salary, @NotBlank String address, UUID code) {
+                    @NotNull @Positive BigDecimal salary, @NotBlank String address, String proposalCode) {
         assertTrue(StringUtils.hasLength(name), "O campo (nome) não pode estar em branco!");
         assertTrue(StringUtils.hasLength(email), "O campo (email) não pode estar em branco!");
         assertTrue(StringUtils.hasLength(address), "O campo (address) não pode estar em branco!");
         assertTrue(StringUtils.hasLength(document), "O campo (document) não pode estar em branco!");
 
         assertTrue(salary != null, "O campo (salary) não pode ser nulo!");
-        assertTrue(code != null, "O campo (code) não pode ser nulo!");
+        assertTrue(proposalCode != null, "O campo (code) não pode ser nulo!");
 
-        this.code = code;
+        this.proposalCode = proposalCode;
         this.name = name;
         this.email = email;
         this.salary = salary;
@@ -70,8 +69,8 @@ public class Proposal {
         return document;
     }
 
-    public UUID getCode() {
-        return code;
+    public String getProposalCode() {
+        return proposalCode;
     }
 
     public String getEmail() {

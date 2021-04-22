@@ -13,7 +13,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
@@ -43,14 +42,14 @@ public class ProposalController {
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{code}")
-                .buildAndExpand(proposal.getCode())
+                .buildAndExpand(proposal.getProposalCode())
                 .toUri()
         ).build();
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<?> getProposal(@PathVariable UUID code) {
-        Optional<Proposal> proposalOptional = proposalRepository.findByCode(code);
+    public ResponseEntity<?> getProposal(@PathVariable String code) {
+        Optional<Proposal> proposalOptional = proposalRepository.findByProposalCode(code);
 
         if (proposalOptional.isEmpty()) {
             return ResponseEntity.notFound().build();

@@ -1,10 +1,11 @@
 package com.mikkaeru.proposal.utils;
 
-import com.mikkaeru.proposal.helper.TestHelper;
+import com.mikkaeru.helper.TestHelper;
 import com.mikkaeru.proposal.model.Proposal;
 import com.mikkaeru.proposal.repository.ProposalRepository;
 import com.mikkaeru.request.card.CardRequestTask;
 import com.mikkaeru.request.card.CardResource;
+import com.mikkaeru.request.card.dto.CardRequest;
 import com.mikkaeru.request.card.dto.CardResponse;
 import com.mikkaeru.request.solicitation.SolicitationReview;
 import com.mikkaeru.request.solicitation.dto.ReviewRequest;
@@ -32,8 +33,6 @@ class ProcessProposalTest extends TestHelper {
     private ProposalRepository proposalRepository;
 
     private Proposal proposal;
-    private final String proposalName = "Proposta 01";
-    private final String proposalDocument = "92554025797";
 
     private final UUID proposalId = UUID.randomUUID();
 
@@ -43,15 +42,20 @@ class ProcessProposalTest extends TestHelper {
         solicitationReview = mock(SolicitationReview.class);
         proposalRepository = mock(ProposalRepository.class);
 
+        String proposalName = "Proposta 01";
+        String proposalDocument = "92554025797";
+
         proposal = new Proposal(
                 proposalName,
                 "proposta@gmail.com",
                 proposalDocument,
                 new BigDecimal("422"),
                 "Travessa das castanheiras",
-                proposalId);
+                proposalId.toString());
 
-        when(cardResource.processCard(proposalId.toString()))
+        CardRequest cardRequest = new CardRequest(proposalDocument, proposalName, proposalId.toString());
+
+        when(cardResource.processCard(cardRequest))
                 .thenReturn(new CardResponse(
                         "1559-5659-5571-5788",
                         proposalName,
@@ -69,7 +73,7 @@ class ProcessProposalTest extends TestHelper {
     void WHEN_CallProcessMethod_MUST_ProcessProposalAndReturnProposalSaved() {
         // Given
         when(solicitationReview.solicitation(any(ReviewRequest.class)))
-                .thenReturn(new ReviewResponse(proposal.getDocument(), proposal.getName(), proposal.getCode().toString(), SEM_RESTRICAO.toString()));
+                .thenReturn(new ReviewResponse(proposal.getDocument(), proposal.getName(), proposal.getProposalCode().toString(), SEM_RESTRICAO.toString()));
 
         CardRequestTask cardRequestTask = new CardRequestTask(cardResource, proposalRepository);
         ProcessProposal processProposal = new ProcessProposal(cardRequestTask, solicitationReview);
@@ -79,7 +83,7 @@ class ProcessProposalTest extends TestHelper {
 
         // Then
         assertEquals(proposal.getName(), result.getName());
-        assertEquals(proposal.getCode(), result.getCode());
+        assertEquals(proposal.getProposalCode(), result.getProposalCode());
         assertEquals(proposal.getEmail(), result.getEmail());
         assertEquals(proposal.getState(), result.getState());
         assertEquals(proposal.getDocument(), result.getDocument());

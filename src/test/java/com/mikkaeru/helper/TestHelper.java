@@ -1,4 +1,4 @@
-package com.mikkaeru.proposal.helper;
+package com.mikkaeru.helper;
 
 import com.github.javafaker.Faker;
 

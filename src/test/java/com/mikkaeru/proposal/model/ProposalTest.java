@@ -22,7 +22,7 @@ class ProposalTest {
     void GIVEN_InvalidValues_MUST_ThrowBindException(String name, String email, String document,
                                                      BigDecimal salary, String address, UUID code) {
         try {
-            var proposal = new Proposal(name, email, document, salary, address, code);
+            var proposal = new Proposal(name, email, document, salary, address, code.toString());
             fail("O objeto proposal não deve ser construído com campos inválidos!");
         } catch (Exception e) {
             assertFalse(e.getMessage().isEmpty());

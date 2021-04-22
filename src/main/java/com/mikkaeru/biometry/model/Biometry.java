@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -19,7 +18,7 @@ public class Biometry {
     @Column(nullable = false)
     private String fingerprint;
     @Column(nullable = false, unique = true)
-    private UUID biometryCode;
+    private String biometryCode;
     @ManyToOne(optional = false)
     private Card card;
     @CreationTimestamp
@@ -30,13 +29,13 @@ public class Biometry {
      */
     public Biometry() { }
 
-    public Biometry(String fingerprint, Card card, UUID biometryCode) {
+    public Biometry(String fingerprint, Card card, String biometryCode) {
         this.card = card;
         this.fingerprint = fingerprint;
         this.biometryCode = biometryCode;
     }
 
-    public UUID getBiometryCode() {
+    public String getBiometryCode() {
         return biometryCode;
     }
 }
