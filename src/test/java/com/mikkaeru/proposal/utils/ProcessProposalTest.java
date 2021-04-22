@@ -62,7 +62,8 @@ class ProcessProposalTest extends TestHelper {
                         new BigDecimal("4905"),
                         proposalId.toString(),
                         null,
-                        LocalDateTime.now()
+                        LocalDateTime.now(),
+                        null
         ));
 
         when(proposalRepository.save(proposal)).thenReturn(proposal);

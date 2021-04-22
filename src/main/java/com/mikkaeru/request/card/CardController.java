@@ -7,7 +7,6 @@ import com.mikkaeru.request.card.dto.LockSolicitationResponse;
 import com.mikkaeru.request.card.model.Card;
 import com.mikkaeru.request.card.model.CardLock;
 import com.mikkaeru.request.card.repository.CardLockRepository;
-import com.mikkaeru.request.card.repository.CardRepository;
 import com.mikkaeru.utils.WebUtils;
 import feign.FeignException;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +24,11 @@ public class CardController {
 
     private final WebUtils webUtils;
     private final CardResource cardResource;
-    private final CardRepository cardRepository;
     private final CardLockRepository cardLockRepository;
 
-    public CardController(WebUtils webUtils, CardResource cardResource, CardRepository cardRepository, CardLockRepository cardLockRepository) {
+    public CardController(WebUtils webUtils, CardResource cardResource, CardLockRepository cardLockRepository) {
         this.webUtils = webUtils;
         this.cardResource = cardResource;
-        this.cardRepository = cardRepository;
         this.cardLockRepository = cardLockRepository;
     }
 
@@ -52,10 +49,7 @@ public class CardController {
 
         Card card = cardResponse.toModel();
 
-        // TODO Fazer uma requisição para o sistema de cartões para verificar se o cartão está bloqueado.
-        // TODO Retirar o campo de status da entidade de cartão.
-
-        if (card.isBlocked()) {
+        if (cardResponse.isBlocked()) {
             return ResponseEntity
                     .unprocessableEntity()
                     .body(new Problem("O cartão já está bloqueado", UNPROCESSABLE_ENTITY.value(), now()));
@@ -69,11 +63,8 @@ public class CardController {
             e.printStackTrace();
         }
 
-        // TODO Verificar a resposta da requisição, e montar uma estrutura de condição
-        // TODO que só salvara o bloqueio se o status do enum for igual a BLOQUEADO.
         if (lockSolicitationResponse != null) {
-            card.lockCard();
-            cardLockRepository.save(new CardLock(card, webUtils.getClientIp(), webUtils.getUserAgent()));
+            cardLockRepository.save(new CardLock(card.getCardCode(), webUtils.getClientIp(), webUtils.getUserAgent()));
         }
 
         return ResponseEntity.ok().build();

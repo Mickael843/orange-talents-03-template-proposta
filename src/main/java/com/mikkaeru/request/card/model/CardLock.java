@@ -2,7 +2,10 @@ package com.mikkaeru.request.card.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.OffsetDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -13,8 +16,7 @@ public class CardLock {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
-    @OneToOne(optional = false)
-    private Card card;
+    private String cardCode;
     @Column(nullable = false)
     private String clientIp;
     @Column(nullable = false)
@@ -27,8 +29,8 @@ public class CardLock {
      */
     public CardLock() { }
 
-    public CardLock(Card card, String clientIp, String userAgent) {
-        this.card = card;
+    public CardLock(String cardCode, String clientIp, String userAgent) {
+        this.cardCode = cardCode;
         this.clientIp = clientIp;
         this.userAgent = userAgent;
     }
