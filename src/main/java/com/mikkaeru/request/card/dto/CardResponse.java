@@ -30,7 +30,7 @@ public class CardResponse {
         return new Card(this.id, this.titular, this.limite, this.idProposta, this.emitidoEm, this.renegociacao);
     }
 
-    public boolean isBlocked() {
+    public boolean isLocked() {
         return !this.bloqueios.isEmpty();
     }
 }
