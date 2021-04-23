@@ -20,9 +20,9 @@ class ProposalTest {
     @MethodSource("provideInvalidValues")
     @DisplayName("Ao fornecer dados inválidos na criação de uma proposta deve ser lançada uma exceção")
     void GIVEN_InvalidValues_MUST_ThrowBindException(String name, String email, String document,
-                                                     BigDecimal salary, String address, UUID code) {
+                                                     BigDecimal salary, String address, String code) {
         try {
-            var proposal = new Proposal(name, email, document, salary, address, code.toString());
+            var proposal = new Proposal(name, email, document, salary, address, code);
             fail("O objeto proposal não deve ser construído com campos inválidos!");
         } catch (Exception e) {
             assertFalse(e.getMessage().isEmpty());
@@ -33,9 +33,9 @@ class ProposalTest {
         Faker faker = new Faker();
 
         var validDocument = "53529230000109";
-        var validCode = UUID.randomUUID();
         var validSalary = new BigDecimal("3500");
         var validName = faker.name().fullName();
+        var validCode = UUID.randomUUID().toString();
         var validAddress = faker.address().stateAbbr();
         var validEmail = faker.name().firstName() + "@gmail.com";
 

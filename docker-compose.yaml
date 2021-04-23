@@ -115,7 +115,10 @@ services:
     image: prom/prometheus
     volumes:
       - prometheus-volume:/etc/prometheus/
-    network_mode: bridge
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+#    network_mode: bridge
+    networks:
+      - proposal-network
     ports:
       - "9090:9090"
 
@@ -148,31 +151,30 @@ services:
       - mysql-volume:/var/lib/mysql
     networks:
       - proposal-network
-#  proposals:
-#    build:
-#      dockerfile: ./Dockerfile
-#      context: .
-#    image: mikkaeru/proposals
-#    container_name: proposals
-#    ports:
-#      - "8081:8081"
-#    restart: on-failure
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/proposals_db
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: admin
-#      FREQUENCY_REQUEST_TASK: 5000
-#      SOLICITATION_REVIEW_PATH: /api/solicitacao
-#      SOLICITATION_REVIEW_URL: http://analise:9999
-#      CARD_RESOURCE_PATH: /api/cartoes
-#      CARD_RESOURCE_URL: http://contas:8888
-#      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080/auth
-#    depends_on:
-#      - mysql_db
-#      - analise
-#      - contas
-#    networks:
-#      proposal-network:
+  proposals:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    image: mikkaeru/proposals
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/proposals_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: admin
+      FREQUENCY_REQUEST_TASK: 5000
+      SOLICITATION_REVIEW_PATH: /api/solicitacao
+      SOLICITATION_REVIEW_URL: http://analise:9999
+      CARD_RESOURCE_PATH_BLOCK_CARD: /{id}/bloqueios
+      CARD_RESOURCE_URL: http://localhost:8888/api/cartoes
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:18080/auth
+    depends_on:
+      - mysql_db
+      - analise
+      - contas
+    networks:
+      proposal-network:
 volumes:
   mysql-volume:
   grafana-volume:
