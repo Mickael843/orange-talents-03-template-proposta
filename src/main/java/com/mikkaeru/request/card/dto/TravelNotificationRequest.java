@@ -23,4 +23,12 @@ public class TravelNotificationRequest {
     public TravelNotification toModel(String cardId, String userAgent, String clientIp) {
         return new TravelNotification(this.travelDestination, this.endDateTravel, cardId, userAgent, clientIp);
     }
+
+    public String getTravelDestination() {
+        return travelDestination;
+    }
+
+    public LocalDate getEndDateTravel() {
+        return endDateTravel;
+    }
 }

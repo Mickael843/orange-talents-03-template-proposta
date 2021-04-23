@@ -17,11 +17,13 @@ public class TravelNotificationController {
 
     private final WebUtils webUtils;
     private final CardRepository cardRepository;
+    private final AccountNotification accountNotification;
     private final TravelNotificationRepository notificationRepository;
 
-    public TravelNotificationController(WebUtils webUtils, CardRepository cardRepository, TravelNotificationRepository notificationRepository) {
+    public TravelNotificationController(WebUtils webUtils, AccountNotification accountNotification, CardRepository cardRepository, TravelNotificationRepository notificationRepository) {
         this.webUtils = webUtils;
         this.cardRepository = cardRepository;
+        this.accountNotification = accountNotification;
         this.notificationRepository = notificationRepository;
     }
 
@@ -34,7 +36,12 @@ public class TravelNotificationController {
             return ResponseEntity.notFound().build();
         }
 
-        notificationRepository.save(notificationRequest.toModel(cardId, webUtils.getUserAgent(), webUtils.getClientIp()));
+        boolean successfullyNotified = accountNotification.notify(cardOptional.get().getCardNumber(), notificationRequest);
+
+        if (successfullyNotified) {
+            notificationRepository.save(
+                    notificationRequest.toModel(cardId, webUtils.getUserAgent(), webUtils.getClientIp()));
+        }
 
         return ResponseEntity.ok().build();
     }

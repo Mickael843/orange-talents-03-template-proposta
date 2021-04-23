@@ -1,9 +1,6 @@
 package com.mikkaeru.request.card;
 
-import com.mikkaeru.request.card.dto.CardRequest;
-import com.mikkaeru.request.card.dto.CardResponse;
-import com.mikkaeru.request.card.dto.LockSolicitation;
-import com.mikkaeru.request.card.dto.LockSolicitationResponse;
+import com.mikkaeru.request.card.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,4 +18,7 @@ public interface CardResource {
 
     @GetMapping
     CardResponse getCard(@RequestParam String idProposta);
+
+    @PostMapping("${card-resource-path-notify}")
+    NotificationCardResponse notify(@PathVariable String id, NotificationCardRequest request);
 }
