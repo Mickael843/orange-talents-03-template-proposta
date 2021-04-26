@@ -7,6 +7,8 @@ import com.mikkaeru.request.card.model.Card;
 import com.mikkaeru.request.card.model.Wallet;
 import com.mikkaeru.request.card.repository.WalletRepository;
 import feign.FeignException;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,11 +24,13 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 @RequestMapping("/cards/{cardId}/wallets")
 public class DigitalWalletController {
 
+    private final Tracer tracer;
     private final CardResource cardResource;
     private final WalletRepository walletRepository;
     private final AssociateDigitalWallet digitalWallet;
 
-    public DigitalWalletController(CardResource cardResource, WalletRepository walletRepository, AssociateDigitalWallet digitalWallet) {
+    public DigitalWalletController(Tracer tracer, CardResource cardResource, WalletRepository walletRepository, AssociateDigitalWallet digitalWallet) {
+        this.tracer = tracer;
         this.cardResource = cardResource;
         this.walletRepository = walletRepository;
         this.digitalWallet = digitalWallet;
@@ -34,6 +38,9 @@ public class DigitalWalletController {
 
     @PostMapping
     public ResponseEntity<?> associate(@PathVariable String cardId, @RequestBody @Valid DigitalWalletRequest walletRequest) {
+        Span activeSpan = tracer.activeSpan();
+        activeSpan.setTag("card.id", cardId);
+
         Optional<CardResponse> cardResponse = findCard(cardId);
 
         if (cardResponse.isEmpty()) {
@@ -52,6 +59,7 @@ public class DigitalWalletController {
         if (walletResponse.isPresent()) {
             Wallet wallet = walletRepository.save(walletRequest.toModel(card));
 
+            activeSpan.log("Carteira criada!");
             return ResponseEntity.created(
                     ServletUriComponentsBuilder.fromCurrentRequest()
                             .path("/{code}")

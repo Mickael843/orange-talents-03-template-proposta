@@ -44,4 +44,12 @@ public class ProposalRequest {
     public String getDocument() {
         return document;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }

@@ -76,8 +76,8 @@ class ProcessProposalTest extends TestHelper {
         when(solicitationReview.solicitation(any(ReviewRequest.class)))
                 .thenReturn(new ReviewResponse(proposal.getDocument(), proposal.getName(), proposal.getProposalCode().toString(), SEM_RESTRICAO.toString()));
 
-        CardRequestTask cardRequestTask = new CardRequestTask(cardResource, proposalRepository);
-        ProcessProposal processProposal = new ProcessProposal(cardRequestTask, solicitationReview);
+        CardRequestTask cardRequestTask = new CardRequestTask(null, cardResource, proposalRepository);
+        ProcessProposal processProposal = new ProcessProposal(null, cardRequestTask, solicitationReview);
 
         // When
         Proposal result = processProposal.process(proposalRepository, proposal);
@@ -97,8 +97,8 @@ class ProcessProposalTest extends TestHelper {
         when(solicitationReview.solicitation(any(ReviewRequest.class)))
                 .thenThrow(FeignException.FeignClientException.UnprocessableEntity.class);
 
-        CardRequestTask cardRequestTask = new CardRequestTask(cardResource, proposalRepository);
-        ProcessProposal processProposal = new ProcessProposal(cardRequestTask, solicitationReview);
+        CardRequestTask cardRequestTask = new CardRequestTask(null, cardResource, proposalRepository);
+        ProcessProposal processProposal = new ProcessProposal(null, cardRequestTask, solicitationReview);
 
         // When
         Proposal result = processProposal.process(proposalRepository, proposal);

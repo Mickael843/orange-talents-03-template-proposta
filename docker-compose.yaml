@@ -116,7 +116,6 @@ services:
     volumes:
       - prometheus-volume:/etc/prometheus/
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml
-#    network_mode: bridge
     networks:
       - proposal-network
     ports:
@@ -140,6 +139,7 @@ services:
       VAULT_DEV_ROOT_TOKEN_ID: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_TOKEN: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_ADDR: http://127.0.0.1:8200
+
   mysql_db:
     image: mysql:latest
     ports:
@@ -151,6 +151,7 @@ services:
       - mysql-volume:/var/lib/mysql
     networks:
       - proposal-network
+
   proposals:
     build:
       dockerfile: ./Dockerfile
@@ -169,6 +170,7 @@ services:
       CARD_RESOURCE_PATH_BLOCK_CARD: /{id}/bloqueios
       CARD_RESOURCE_URL: http://localhost:8888/api/cartoes
       KEYCLOAK_AUTH_SERVER_URL: http://keycloak:18080/auth
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
     depends_on:
       - mysql_db
       - analise

@@ -7,6 +7,8 @@ import com.mikkaeru.request.solicitation.SolicitationReview;
 import com.mikkaeru.request.solicitation.dto.ReviewRequest;
 import com.mikkaeru.request.solicitation.dto.ReviewResponse;
 import feign.FeignException;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.stereotype.Component;
 
 import static com.mikkaeru.proposal.model.ProposalState.ELIGIBLE;
@@ -15,18 +17,22 @@ import static com.mikkaeru.proposal.model.ProposalState.NOT_ELIGIBLE;
 @Component
 public class ProcessProposal {
 
+    private final Tracer tracer;
     private final CardRequestTask cardRequestTask;
     private final SolicitationReview solicitationReview;
 
-    public ProcessProposal(CardRequestTask cardRequestTask, SolicitationReview solicitationReview) {
+    public ProcessProposal(Tracer tracer, CardRequestTask cardRequestTask, SolicitationReview solicitationReview) {
+        this.tracer = tracer;
         this.cardRequestTask = cardRequestTask;
         this.solicitationReview = solicitationReview;
     }
 
     public Proposal process(ProposalRepository proposalRepository, Proposal proposal) {
+        Span activeSpan = tracer.activeSpan();
         ReviewResponse reviewResponse = null;
 
         try {
+            activeSpan.log("Realizando requisição ao sistema de solicitações!");
             reviewResponse = solicitationReview.solicitation(
                     new ReviewRequest(proposal.getDocument(), proposal.getName(), proposal.getProposalCode().toString()));
         } catch (FeignException.FeignClientException.UnprocessableEntity e) {
@@ -40,6 +46,7 @@ public class ProcessProposal {
         proposal = proposalRepository.save(proposal);
 
         if (proposal.getState().equals(ELIGIBLE)) {
+            activeSpan.setBaggageItem("eligible.proposal", proposal.getProposalCode());
             cardRequestTask.addAcceptProposal(proposal);
         }
 

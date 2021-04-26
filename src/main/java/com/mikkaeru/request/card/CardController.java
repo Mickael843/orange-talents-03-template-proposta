@@ -3,6 +3,8 @@ package com.mikkaeru.request.card;
 import com.mikkaeru.exception.Problem;
 import com.mikkaeru.request.card.dto.CardResponse;
 import feign.FeignException;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,16 +20,21 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 @RequestMapping("/cards")
 public class CardController {
 
+    private final Tracer tracer;
     private final CardLock cardLock;
     private final CardResource cardResource;
 
-    public CardController(CardLock cardLock, CardResource cardResource) {
+    public CardController(Tracer tracer, CardLock cardLock, CardResource cardResource) {
+        this.tracer = tracer;
         this.cardLock = cardLock;
         this.cardResource = cardResource;
     }
 
     @GetMapping("/{cardId}/blocks")
     public ResponseEntity<?> lockCard(@PathVariable String cardId) {
+        Span activeSpan = tracer.activeSpan();
+        activeSpan.setTag("card.id", cardId);
+
         Optional<CardResponse> cardResponse = findCard(cardId);
 
         if (cardResponse.isEmpty()) {
