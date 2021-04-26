@@ -1,12 +1,11 @@
 package com.mikkaeru.request.card.dto;
 
 import com.mikkaeru.request.card.model.Card;
+import com.mikkaeru.request.card.model.WalletType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static com.mikkaeru.request.card.model.WalletType.PAYPAL;
 
 public class CardResponse {
 
@@ -38,11 +37,11 @@ public class CardResponse {
         return !this.bloqueios.isEmpty();
     }
 
-    public boolean existPayPalWallet() {
+    public boolean existWallet(WalletType walletType) {
 
         for (WalletRequest walletRequest: this.carteiras) {
 
-            if (walletRequest.getEmissor().equalsIgnoreCase(PAYPAL.getName())) {
+            if (walletRequest.getEmissor().equalsIgnoreCase(walletType.getName())) {
                 return true;
             }
         }

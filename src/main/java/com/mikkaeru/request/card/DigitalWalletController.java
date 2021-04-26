@@ -14,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.util.Optional;
 
-import static com.mikkaeru.request.card.model.WalletType.PAYPAL;
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.requireNonNull;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
@@ -41,7 +40,7 @@ public class DigitalWalletController {
             return ResponseEntity.notFound().build();
         }
 
-        if (cardResponse.get().existPayPalWallet()) {
+        if (cardResponse.get().existWallet(walletRequest.getWallet())) {
             return ResponseEntity.unprocessableEntity().body(
                     new Problem("Já existe uma carteira Paypal associada a esse cartão!", UNPROCESSABLE_ENTITY.value(), now())
             );
@@ -51,7 +50,7 @@ public class DigitalWalletController {
         Optional<AssociateWalletResponse> walletResponse = digitalWallet.associate(walletRequest, card);
 
         if (walletResponse.isPresent()) {
-            Wallet wallet = walletRepository.save(walletRequest.toModel(card, PAYPAL));
+            Wallet wallet = walletRepository.save(walletRequest.toModel(card));
 
             return ResponseEntity.created(
                     ServletUriComponentsBuilder.fromCurrentRequest()

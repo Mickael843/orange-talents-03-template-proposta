@@ -15,7 +15,7 @@ public class Wallet {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
     @Column(nullable = false, unique = true)
     private String walletCode;

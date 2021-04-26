@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static com.mikkaeru.request.card.model.WalletType.PAYPAL;
-
 @Component
 public class AssociateDigitalWallet {
 
@@ -23,9 +21,9 @@ public class AssociateDigitalWallet {
         Optional<AssociateWalletResponse> walletResponse = Optional.empty();
 
         try {
-            walletResponse = Optional.of(cardResource.associate(
-                    card.getCardNumber(), new AssociateWalletRequest(walletRequest.getEmail(), PAYPAL.getName())
-            ));
+            walletResponse = Optional.of(cardResource.associate(card.getCardNumber(), new AssociateWalletRequest(
+                    walletRequest.getEmail(), walletRequest.getWallet().getName()
+            )));
         } catch (FeignException.FeignClientException ignored) { }
 
         return walletResponse;

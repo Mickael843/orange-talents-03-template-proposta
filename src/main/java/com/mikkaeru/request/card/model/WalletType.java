@@ -2,7 +2,8 @@ package com.mikkaeru.request.card.model;
 
 public enum WalletType {
 
-    PAYPAL("PayPal");
+    PAYPAL("PayPal"),
+    SAMSUNG_PAY("Samsung pay");
 
     String name;
 
