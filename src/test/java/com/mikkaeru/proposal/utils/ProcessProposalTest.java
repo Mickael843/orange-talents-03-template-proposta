@@ -63,8 +63,8 @@ class ProcessProposalTest extends TestHelper {
                         proposalId.toString(),
                         null,
                         LocalDateTime.now(),
-                        null
-        ));
+                        null,
+                        null));
 
         when(proposalRepository.save(proposal)).thenReturn(proposal);
     }

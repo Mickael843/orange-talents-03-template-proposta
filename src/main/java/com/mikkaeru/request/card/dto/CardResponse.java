@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.mikkaeru.request.card.model.WalletType.PAYPAL;
+
 public class CardResponse {
 
     private final String id;
@@ -15,8 +17,9 @@ public class CardResponse {
     private final String renegociacao;
     private final LocalDateTime emitidoEm;
     private final List<Blocked> bloqueios;
+    private final List<WalletRequest> carteiras;
 
-    public CardResponse(String id, String titular, BigDecimal limite, String idProposta, String renegociacao, LocalDateTime emitidoEm, List<Blocked> bloqueios) {
+    public CardResponse(String id, String titular, BigDecimal limite, String idProposta, String renegociacao, LocalDateTime emitidoEm, List<Blocked> bloqueios, List<WalletRequest> carteiras) {
         this.id = id;
         this.titular = titular;
         this.limite = limite;
@@ -24,6 +27,7 @@ public class CardResponse {
         this.renegociacao = renegociacao;
         this.emitidoEm = emitidoEm;
         this.bloqueios = bloqueios;
+        this.carteiras = carteiras;
     }
 
     public Card toModel() {
@@ -32,5 +36,17 @@ public class CardResponse {
 
     public boolean isLocked() {
         return !this.bloqueios.isEmpty();
+    }
+
+    public boolean existPayPalWallet() {
+
+        for (WalletRequest walletRequest: this.carteiras) {
+
+            if (walletRequest.getEmissor().equalsIgnoreCase(PAYPAL.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
