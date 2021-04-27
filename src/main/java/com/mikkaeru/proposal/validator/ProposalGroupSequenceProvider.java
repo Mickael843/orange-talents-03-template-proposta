@@ -6,6 +6,8 @@ import org.hibernate.validator.spi.group.DefaultGroupSequenceProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mikkaeru.utils.FieldEncryptor.decode;
+
 public class ProposalGroupSequenceProvider implements DefaultGroupSequenceProvider<ProposalRequest> {
 
     @Override
@@ -14,7 +16,7 @@ public class ProposalGroupSequenceProvider implements DefaultGroupSequenceProvid
         groups.add(ProposalRequest.class);
 
         if (proposalRequest != null && proposalRequest.getDocument() != null) {
-            var documentSize = proposalRequest.getDocument().length();
+            var documentSize = decode(proposalRequest.getDocument()).length();
 
             if (documentSize == 11) {
                 groups.add(CpfGroup.class);

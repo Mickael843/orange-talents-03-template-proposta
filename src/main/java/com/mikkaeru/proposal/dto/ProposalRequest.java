@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import static com.mikkaeru.proposal.utils.DocumentReplace.replaceAll;
+import static com.mikkaeru.utils.FieldEncryptor.encode;
 
 @GroupSequenceProvider(ProposalGroupSequenceProvider.class)
 public class ProposalRequest {
@@ -38,11 +39,11 @@ public class ProposalRequest {
     }
 
     public Proposal toModel() {
-        return new Proposal(name, email, document, salary, address, UUID.randomUUID().toString());
+        return new Proposal(name, email, encode(document), salary, address, UUID.randomUUID().toString());
     }
 
     public String getDocument() {
-        return document;
+        return encode(document);
     }
 
     public String getName() {
