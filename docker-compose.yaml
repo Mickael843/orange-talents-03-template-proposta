@@ -114,8 +114,8 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
-      - prometheus-volume:/etc/prometheus/
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      - prometheus-volume:/etc/prometheus/
     networks:
       - proposal-network
     ports:
@@ -125,6 +125,7 @@ services:
     image: grafana/grafana
     volumes:
       - grafana-volume:/var/lib/grafana
+      - ./grafana/:/etc/grafana/provisioning/
     network_mode: bridge
     ports:
       - "3000:3000"
