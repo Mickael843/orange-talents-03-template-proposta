@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -31,22 +32,22 @@ public class CardRequestTask {
     public void execute() {
 
         if (acceptProposals.size() > 0) {
-            CardResponse cardResponse = null;
             Span activeSpan = tracer.activeSpan();
             Proposal proposal = acceptProposals.iterator().next();
+            Optional<CardResponse> cardResponse = Optional.empty();
 
             try {
                 activeSpan.log("Realizando requisição para o sistema de cartão - recurso de criação de cartão!");
-                cardResponse = cardResource.processCard(new CardRequest(
-                        proposal.getDocument(), proposal.getName(), proposal.getProposalCode().toString()
-                ));
+                cardResponse = Optional.ofNullable(cardResource.processCard(new CardRequest(
+                        proposal.getDocument(), proposal.getName(), proposal.getProposalCode()
+                )));
             } catch (FeignException.FeignClientException.NotFound ignored) { }
 
-            if (cardResponse != null) {
+            cardResponse.ifPresent(response -> {
                 acceptProposals.remove(proposal);
-                proposal.addCard(cardResponse.toModel());
+                proposal.addCard(response.toModel());
                 proposalRepository.save(proposal);
-            }
+            });
         }
     }
 

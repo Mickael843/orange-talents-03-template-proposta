@@ -39,7 +39,7 @@ public class ProposalRequest {
     }
 
     public Proposal toModel() {
-        return new Proposal(name, email, encode(document), salary, address, UUID.randomUUID().toString());
+        return new Proposal(name, email, document, salary, address, UUID.randomUUID().toString());
     }
 
     public String getDocument() {

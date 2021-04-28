@@ -11,6 +11,7 @@ import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 import static com.mikkaeru.utils.FieldEncryptor.decode;
+import static com.mikkaeru.utils.FieldEncryptor.encode;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -59,7 +60,7 @@ public class Proposal {
         this.email = email;
         this.salary = salary;
         this.address = address;
-        this.document = document;
+        this.document = encode(document);
     }
 
     public String getName() {

@@ -21,12 +21,12 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 public class CardController {
 
     private final Tracer tracer;
-    private final CardLock cardLock;
+    private final CardLockService cardLockService;
     private final CardResource cardResource;
 
-    public CardController(Tracer tracer, CardLock cardLock, CardResource cardResource) {
+    public CardController(Tracer tracer, CardLockService cardLockService, CardResource cardResource) {
         this.tracer = tracer;
-        this.cardLock = cardLock;
+        this.cardLockService = cardLockService;
         this.cardResource = cardResource;
     }
 
@@ -47,7 +47,7 @@ public class CardController {
                     .body(new Problem("O cartão já está bloqueado", UNPROCESSABLE_ENTITY.value(), now()));
         }
 
-       cardLock.lock(cardResponse.get().toModel());
+       cardLockService.lock(cardResponse.get().toModel());
 
         return ResponseEntity.ok().build();
     }

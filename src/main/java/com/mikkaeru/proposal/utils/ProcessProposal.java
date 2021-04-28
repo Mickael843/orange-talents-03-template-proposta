@@ -11,6 +11,8 @@ import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static com.mikkaeru.proposal.model.ProposalState.ELIGIBLE;
 import static com.mikkaeru.proposal.model.ProposalState.NOT_ELIGIBLE;
 
@@ -27,29 +29,27 @@ public class ProcessProposal {
         this.solicitationReview = solicitationReview;
     }
 
-    public Proposal process(ProposalRepository proposalRepository, Proposal proposal) {
+    public Proposal process(ProposalRepository proposalRepository, final Proposal proposal) {
         Span activeSpan = tracer.activeSpan();
-        ReviewResponse reviewResponse = null;
+        Optional<ReviewResponse> reviewResponse = Optional.empty();
 
         try {
             activeSpan.log("Realizando requisição ao sistema de solicitações!");
-            reviewResponse = solicitationReview.solicitation(
-                    new ReviewRequest(proposal.getDocument(), proposal.getName(), proposal.getProposalCode().toString()));
+            reviewResponse = Optional.ofNullable(solicitationReview.solicitation(
+                    new ReviewRequest(proposal.getDocument(), proposal.getName(), proposal.getProposalCode())));
         } catch (FeignException.FeignClientException.UnprocessableEntity e) {
             proposal.addState(NOT_ELIGIBLE);
         }
 
-        if (reviewResponse != null) {
-            proposal.addState(reviewResponse.getResultadoSolicitacao().getEquivalentStatus());
+        reviewResponse.ifPresent(r -> proposal.addState(r.getResultadoSolicitacao().getEquivalentStatus()));
+
+        Proposal proposalSaved = proposalRepository.save(proposal);
+
+        if (proposalSaved.getState().equals(ELIGIBLE)) {
+            activeSpan.setBaggageItem("eligible.proposal", proposalSaved.getProposalCode());
+            cardRequestTask.addAcceptProposal(proposalSaved);
         }
 
-        proposal = proposalRepository.save(proposal);
-
-        if (proposal.getState().equals(ELIGIBLE)) {
-            activeSpan.setBaggageItem("eligible.proposal", proposal.getProposalCode());
-            cardRequestTask.addAcceptProposal(proposal);
-        }
-
-        return proposal;
+        return proposalSaved;
     }
 }

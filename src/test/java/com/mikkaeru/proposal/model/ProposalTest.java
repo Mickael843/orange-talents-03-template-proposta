@@ -1,6 +1,7 @@
 package com.mikkaeru.proposal.model;
 
 import com.github.javafaker.Faker;
+import com.mikkaeru.helper.TestHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class ProposalTest {
+class ProposalTest extends TestHelper {
 
     @ParameterizedTest
     @MethodSource("provideInvalidValues")
