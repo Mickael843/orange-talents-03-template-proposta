@@ -8,8 +8,10 @@ import com.mikkaeru.proposal.repository.ProposalRepository;
 import com.mikkaeru.proposal.utils.ProcessProposal;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -61,10 +63,8 @@ public class ProposalController {
     public ResponseEntity<?> getProposal(@PathVariable String code) {
         Optional<Proposal> proposalOptional = proposalRepository.findByProposalCode(code);
 
-        if (proposalOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(new ProposalResponse(proposalOptional.get()));
+        return proposalOptional
+                .map(proposal -> ResponseEntity.ok(new ProposalResponse(proposal)))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }
