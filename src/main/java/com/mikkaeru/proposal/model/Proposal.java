@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
-import static com.mikkaeru.utils.FieldEncryptor.decode;
 import static com.mikkaeru.utils.FieldEncryptor.encode;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.EnumType.STRING;
@@ -68,7 +67,7 @@ public class Proposal {
     }
 
     public String getDocument() {
-        return decode(document);
+        return document;
     }
 
     public String getProposalCode() {

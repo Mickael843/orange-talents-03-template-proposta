@@ -14,7 +14,7 @@ public class ProposalResponse {
         this.name = proposal.getName();
         this.email = proposal.getEmail();
         this.state = proposal.getState();
-        this.code = proposal.getProposalCode().toString();
+        this.code = proposal.getProposalCode();
     }
 
     public String getCode() {

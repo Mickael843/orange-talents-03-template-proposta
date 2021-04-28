@@ -4,8 +4,8 @@ import com.mikkaeru.helper.TestHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FieldEncryptorTest extends TestHelper {
 
@@ -19,10 +19,9 @@ class FieldEncryptorTest extends TestHelper {
     }
 
     @Test
-    @DisplayName("Deve decodificar um campo com base em uma senha em comum")
-    void MUST_DecodeField() {
+    @DisplayName("Deve verificar se é o mesmo valor")
+    void MUST_VerifyThatItIsSameValue() {
         String encryptedValue = FieldEncryptor.encode(value);
-        String decryptedValue = FieldEncryptor.decode(encryptedValue);
-        assertEquals(value, decryptedValue);
+        assertTrue(FieldEncryptor.matchers(value, encryptedValue));
     }
 }

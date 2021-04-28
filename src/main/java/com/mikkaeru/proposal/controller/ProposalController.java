@@ -17,7 +17,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.mikkaeru.utils.FieldEncryptor.matchers;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 @RestController
@@ -40,9 +42,12 @@ public class ProposalController {
         activeSpan.setTag("user.name", proposalRequest.getName());
         activeSpan.setBaggageItem("user.email", proposalRequest.getEmail());
 
-        boolean existsDocument = proposalRepository.existsByDocument(proposalRequest.getDocument());
+        Iterable<Proposal> proposals = proposalRepository.findAll();
 
-        if (existsDocument) {
+        AtomicBoolean existsDocument = new AtomicBoolean(false);
+        proposals.forEach(proposal -> existsDocument.set(matchers(proposalRequest.getDocument(), proposal.getDocument())));
+
+        if (existsDocument.get()) {
             return ResponseEntity.unprocessableEntity().body(
                     new Problem("Documento invalido!", UNPROCESSABLE_ENTITY.value(), LocalDateTime.now()));
         }

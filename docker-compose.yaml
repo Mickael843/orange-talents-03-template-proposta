@@ -61,6 +61,8 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
       POSTGRES_PORT_5432_TCP_ADDR: 127.0.0.1
+    networks:
+      proposal-network:
 
   analise:
     image: 'zupacademy/analise-financeira'
@@ -170,7 +172,7 @@ services:
       SOLICITATION_REVIEW_URL: http://analise:9999
       CARD_RESOURCE_PATH_BLOCK_CARD: /{id}/bloqueios
       CARD_RESOURCE_URL: http://localhost:8888/api/cartoes
-      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:18080/auth
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080/auth
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
     depends_on:
       - mysql_db
