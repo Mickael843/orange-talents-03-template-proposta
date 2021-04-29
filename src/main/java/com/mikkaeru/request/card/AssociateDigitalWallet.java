@@ -27,7 +27,7 @@ public class AssociateDigitalWallet {
 
         try {
             activeSpan.log("Realizando requisição oa sistema de cartão - recurso de bloqueio de cartões!");
-            walletResponse = Optional.of(cardResource.associate(card.getCardNumber(), new AssociateWalletRequest(
+            walletResponse = Optional.ofNullable(cardResource.associate(card.getCardNumber(), new AssociateWalletRequest(
                     walletRequest.getEmail(), walletRequest.getWallet().getName()
             )));
         } catch (FeignException.FeignClientException ignored) { }

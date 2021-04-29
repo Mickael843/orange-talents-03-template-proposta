@@ -1,5 +1,6 @@
 package com.mikkaeru.request.card;
 
+import com.mikkaeru.exception.Problem;
 import com.mikkaeru.request.card.dto.TravelNotificationRequest;
 import com.mikkaeru.request.card.model.Card;
 import com.mikkaeru.request.card.repository.CardRepository;
@@ -11,8 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+
 @RestController
-@RequestMapping("/cards/{cardId}")
+@RequestMapping("/cards/{cardId}/notices")
 public class TravelNotificationController {
 
     private final WebUtils webUtils;
@@ -41,8 +45,10 @@ public class TravelNotificationController {
         if (successfullyNotified) {
             notificationRepository.save(
                     notificationRequest.toModel(cardId, webUtils.getUserAgent(), webUtils.getClientIp()));
+
+            return ResponseEntity.ok().build();
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.unprocessableEntity().body(new Problem("Error ao notificar sistema!", UNPROCESSABLE_ENTITY.value(), now()));
     }
 }

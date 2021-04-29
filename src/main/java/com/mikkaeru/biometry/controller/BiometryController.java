@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
-@RequestMapping("/biometrics")
+@RequestMapping("/cards/{cardCode}/biometrics")
 public class BiometryController {
 
     private final CardRepository cardRepository;
@@ -29,8 +29,8 @@ public class BiometryController {
         this.biometryRepository = biometryRepository;
     }
 
+    @PostMapping
     @Transactional
-    @PostMapping(value = "/{cardCode}")
     public ResponseEntity<?> addBiometry(@PathVariable String cardCode, @RequestBody @Valid BiometryRequest biometryRequest) {
 
         Optional<Card> cardOptional = cardRepository.findByCardCode(cardCode);

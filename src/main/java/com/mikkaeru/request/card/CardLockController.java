@@ -17,20 +17,20 @@ import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 @RestController
-@RequestMapping("/cards")
-public class CardController {
+@RequestMapping("/cards/{cardId}/blocks")
+public class CardLockController {
 
     private final Tracer tracer;
     private final CardLockService cardLockService;
     private final CardResource cardResource;
 
-    public CardController(Tracer tracer, CardLockService cardLockService, CardResource cardResource) {
+    public CardLockController(Tracer tracer, CardLockService cardLockService, CardResource cardResource) {
         this.tracer = tracer;
         this.cardLockService = cardLockService;
         this.cardResource = cardResource;
     }
 
-    @GetMapping("/{cardId}/blocks")
+    @GetMapping
     public ResponseEntity<?> lockCard(@PathVariable String cardId) {
         Span activeSpan = tracer.activeSpan();
         activeSpan.setTag("card.id", cardId);
